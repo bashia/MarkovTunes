@@ -1,7 +1,6 @@
 from django.shortcuts import render,render_to_response
 from django.http import HttpResponse
 from django.template import Template
-from .forms import UploadFileForm
 
 def uploadpage(request):
     return render(request,'markovtunes/index.html')
