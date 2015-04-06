@@ -379,24 +379,20 @@ function audioLayerControl(elementContext)
         var blob = this.toWave()
         var url = blob.toBlobUrlAsync("application/octet-stream");
         var wavfile = blob.encodeWaveFile();
-        console.log(wavfile);
 
         var fakeform = new FormData();
-        fakeform.append('fname','wavfile.wav')
-        console.log(wavfile.length);
+        var wavblob = new Blob([wavfile],{type : 'application/octet-stream'});
 
-        fakeform.append('wavfile',JSON.stringify(wavfile));
-        // for (value in wavfile){
-        //   fakeform.append('wavfile',value);
-        // }
+        fakeform.append('wavfile',wavblob);
         $.ajax({
           url: 'upload',
           type: 'POST',
           data: fakeform,
           contentType: false,
           processData: false,
-          success: function(data) {
+          success: function(data) {   //Bad practice- the response is literally the relative URL of the post-upload page. I don't care right now.
             alert("Upload success!");
+            window.location.href = data;
           },
           error: function(jqXHR,textStatus,errorThrown) {
             alert("Upload failure: " + errorThrown);
