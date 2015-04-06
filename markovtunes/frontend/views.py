@@ -1,23 +1,31 @@
 from django.shortcuts import render,render_to_response
 from django.http import HttpResponse
 from django.template import Template
+from uploadutils import UploadFileForm, handlefile
 
+from django.views.decorators.csrf import csrf_exempt #DO NOT PUT THIS INTO PRODUCTION!!!
+
+@csrf_exempt
 def uploadpage(request):
     return render(request,'markovtunes/index.html')
 
+@csrf_exempt
 def uploadhandler(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            return HttpResponseRedirect('/success/url/')
-    else:
-        form = UploadFileForm()
-    return render_to_response('upload.html', {'form': form})
 
+    return HttpResponseRedirect('/')
 
-def input(request):
-    fp = open("/Users/darius/MarkovTunes/markovtunes/markovtunes/static/audioeditor/index.html")
-    a = fp.read()
-    fp.close()
-    return HttpResponse(a)
+@csrf_exempt
+def iterate(request):
+    return render(request,'markovtunes/iterate.html')
+
+# if request.method == 'POST':
+#     print("Posting"+ request)
+#     form = UploadFileForm(request.POST, request.FILES)
+#     if form.is_valid():
+#         print ("valid form")
+#         handlefile(request.FILES['wavfile'])
+#         return HttpResponseRedirect('/iterate')
+#     else:
+#         print("invalid form")
+# else:
+#     form = UploadFileForm()

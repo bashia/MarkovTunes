@@ -376,14 +376,21 @@ function audioLayerControl(elementContext)
 
     this.save = function save(saveLink)
     {
-        var url = this.toWave().toBlobUrlAsync("application/octet-stream");
+        var blob = this.toWave()
+        var url = blob.toBlobUrlAsync("application/octet-stream");
+        var wavfile = blob.encodeWaveFile();
+        console.log(wavfile);
 
-        console.log(url);
         var fakeform = new FormData();
-        fakeform.append('cropdata',this);
+        fakeform.append('fname','wavfile.wav')
+        console.log(wavfile.length);
 
+        fakeform.append('wavfile',JSON.stringify(wavfile));
+        // for (value in wavfile){
+        //   fakeform.append('wavfile',value);
+        // }
         $.ajax({
-          url: "upload",
+          url: 'upload',
           type: 'POST',
           data: fakeform,
           contentType: false,

@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'markovtunes.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url('input',views.input),
-    url('',views.uploadpage, name='start'),
-    url('upload',views.uploadhandler)
+    url('^$',views.uploadpage, name='start'),
+    url('upload',views.uploadhandler, name = 'postfile'),
+    url('iterate',views.iterate)
 )
