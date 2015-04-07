@@ -10,5 +10,6 @@ urlpatterns = patterns('',
 
     url('^$',views.uploadpage, name='start'),
     url('upload',views.uploadhandler, name = 'postfile'),
+    url('newtrack',views.sendnewtrack, name = 'sendnewtrack'),
     url('iterate',views.iterate)
 )

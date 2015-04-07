@@ -2,6 +2,7 @@ from django.shortcuts import render,render_to_response,redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Template
 from uploadutils import UploadFileForm, handlefile
+from markovutils import generateWav
 
 from django.views.decorators.csrf import csrf_exempt #DO NOT PUT THIS INTO PRODUCTION!!!
 
@@ -38,14 +39,12 @@ def uploadhandler(request): # Assuming best intentions (use AWS' IP host restric
 def iterate(request):
     return render(request,'markovtunes/iterate.html')
 
-# if request.method == 'POST':
-#     print("Posting"+ request)
-#     form = UploadFileForm(request.POST, request.FILES)
-#     if form.is_valid():
-#         print ("valid form")
-#         handlefile(request.FILES['wavfile'])
-#         return HttpResponseRedirect('/iterate')
-#     else:
-#         print("invalid form")
-# else:
-#     form = UploadFileForm()
+@csrf_exempt
+def sendnewtrack(request):
+    response = HttpResponse()
+    responseData = generateWav()
+    response.write(responseData[0])
+    response['Content-Type'] ='audio/wav'
+    response['Content-Length'] = responseData[1]
+    #import pdb; pdb.set_trace()
+    return response
