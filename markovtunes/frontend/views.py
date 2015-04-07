@@ -23,18 +23,6 @@ def uploadhandler(request): # Assuming best intentions (use AWS' IP host restric
 
     return response
 
-    # if request.method == 'POST': # Some more secure code
-    #     print("Posting"+ request)
-    #     # form = UploadFileForm(request.POST, request.FILES)
-    #     # if form.is_valid():
-    #     #     print ("valid form")
-    #     #     handlefile(request.FILES['wavfile'])
-    #     #     return HttpResponseRedirect('/iterate')
-    #     # else:
-    #     #     print("invalid form")
-    # else:
-    #     form = UploadFileForm()
-
 @csrf_exempt
 def iterate(request):
     return render(request,'markovtunes/iterate.html')
@@ -47,4 +35,13 @@ def sendnewtrack(request):
     response['Content-Type'] ='audio/wav'
     response['Content-Length'] = responseData[1]
     #import pdb; pdb.set_trace()
+    return response
+
+@csrf_exempt
+def integratefeedback(request):
+
+    #Access global Markov Model somehow, call its methods with request data as parameters
+
+    response = HttpResponse('iterate')
+    response['redirect'] = 'iterate'
     return response
