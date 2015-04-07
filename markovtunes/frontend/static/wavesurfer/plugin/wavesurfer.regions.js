@@ -87,6 +87,11 @@ WaveSurfer.Region = {
         this.render();
 
         this.wavesurfer.fireEvent('region-created', this);
+
+        this.like = params.like === undefined ? true : Boolean(params.like); //Add in "like" parameter
+        // if (this.like !== undefinded) {
+        //   this.color = this.like ? 'rgba(255, 0, 0, 0.1)' : 'rgba(0, 255, 0, 0.1)';
+        // }
     },
 
     /* Update region params. */
@@ -111,6 +116,9 @@ WaveSurfer.Region = {
         }
         if (null != params.drag) {
             this.drag = Boolean(params.drag);
+        }
+        if (null != params.like) {
+            this.like = params.like
         }
         this.updateRender();
         this.fireEvent('update');
@@ -373,6 +381,14 @@ WaveSurfer.initRegions = function () {
         this.regions = Object.create(WaveSurfer.Regions);
         this.regions.init(this);
     }
+};
+
+WaveSurfer.getRegions = function () {
+  if (this.regions) {
+    console.log(this.regions);
+    return this.regions;
+  }
+
 };
 
 WaveSurfer.addRegion = function (options) {

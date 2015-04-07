@@ -6,7 +6,29 @@ var GLOBAL_ACTIONS = {
       console.log("Like region selected");    // Make these trigger a different kind of region
     },
     'submit': function() {
-      console.log("Ratings submitted"); //Do some kind of ajax stuff
+
+      var likedsecs = []
+      var dislikedsecs = []
+      var regionslist = wavesurfer.getRegions().list
+
+      $.each(wavesurfer.getRegions().list,function (val) {
+        likedsecs.push( {
+          'start' : regionslist[val].start,
+          'end' : regionslist[val].end
+        });
+      });
+
+      feedback = {
+        'liked' : likedsecs,
+        'disliked' : []
+      };
+
+        $.ajax({
+            url: 'feedback',
+            type: 'post',
+            dataType: 'json',
+            data: JSON.stringify(feedback)
+        });
     }
 };
 
@@ -16,8 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('keydown', function (e) {
         var map = {
             32: 'play',       // space
-            37: 'back',       // left
-            39: 'forth'       // right
         };
         var action = map[e.keyCode];
         if (action in GLOBAL_ACTIONS) {
