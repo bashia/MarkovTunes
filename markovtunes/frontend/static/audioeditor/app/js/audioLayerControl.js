@@ -552,26 +552,6 @@ function initializeAudioLayerControls()
 {
     new audioLayerControl(document.getElementsByTagName("audiolayercontrol")[0]);
 
-    //var allElements = document.getElementsByTagName("audiolayercontrol");
-    /*for(var i = 0; i < allElements.length; ++i)
-    {
-        var tagName = allElements[i].nodeName;
-        console.log(tagName + " " + i);
-        var obj = null;
-
-        if (tagName.toLowerCase() == "audiolayercontrol")
-        {
-            obj = new audioLayerControl(allElements[i]);
-        }
-        else if (tagName.toLowerCase() == "audiolayernavigation")
-        {
-            obj = new audioLayerControl(allElements[i]);
-        }
-        else if (tagName.toLowerCase() == "audiolayersequenceeditor")
-        {
-            obj = new AudioLayerSequenceEditor(allElements[i]);
-        }
-    }*/
 }
 
 var activeAudioLayerControl = undefined;

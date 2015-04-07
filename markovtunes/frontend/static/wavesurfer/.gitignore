@@ -1,0 +1,5 @@
+/dist/wavesurfer.cjs.js
+/dist/wavesurfer.amd.js
+/node_modules
+/bower_components
+/npm-debug.log

@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>MarkovTunes Wav Uploader</title>
+    <title>MarkovTunes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -17,18 +17,13 @@
     </style>
     <link href="static/audioeditor/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
-    <!-- Le fav and touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="static/audioeditor/bootstrap/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="static/audioeditor/bootstrap/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="static/audioeditor/bootstrap/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="static/audioeditor/bootstrap/ico/apple-touch-icon-57-precomposed.png">
   </head>
 
   <body onload="onDocumentLoaded()">
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="#">MarkovTunes Wav Uploader</a>
+          <a class="brand" href="#">MarkovTunes</a>
         </div>
       </div>
     </div>
@@ -86,8 +81,7 @@
               </div>
               <div class="btn-group">
                 <a class="btn btn-large btn-primary" onclick="$('#audioLayerControl')[0].save($('#savelink')[0]);"><i class="icon-upload"></i> Upload</a>
-                <a class="btn btn-large btn-success disabled" id="savelink" download="export.wav"><i class="icon-download"></i> Save</a>
-              </div>
+                </div>
             </div>
           </center>
         </div>
@@ -100,103 +94,6 @@
         </div>
       </div>
       <br>
-      <div class="row">
-        <div class="span1"><br></div>
-        <div class="span2">
-          <h6>Gain</h6>
-          <div class="well" style="height: 130px; position:relative">
-            <p>Change the volume of the selected audio sequence with the given gain multiplicator.</p>
-
-              <div class="pull-right" style=" position:absolute; bottom: 5px; width: 100%;" >
-                <div class="btn-group" >
-
-                    <button class="btn btn-success" onclick="decrease_db()"><i class="icon-minus"></i></button>
-                    <button id="gain-db" class="btn disabled" onclick="gain_btn_clicked()">0 db</button>
-                    <button class="btn btn-success" onclick="increase_db()"><i class="icon-plus"></i></button>
-                </div>
-              </div>
-            <script type="text/javascript">
-                var db_gain = 0;
-
-                function decrease_db()
-                {
-                  --db_gain;
-                  update_db_gain_btn();
-                }
-
-                function increase_db()
-                {
-                  ++db_gain;
-                  update_db_gain_btn();
-                }
-
-                function update_db_gain_btn()
-                {
-                  var gain_btn = $('#gain-db')[0];
-
-                  gain_btn.innerHTML = db_gain + ' db';
-
-                  if (db_gain === 0)
-                  {
-                    gain_btn.className = 'btn disabled';
-                  }
-                  else
-                  {
-                    gain_btn.className = 'btn btn-primary';
-                  }
-                }
-
-                function gain_btn_clicked()
-                {
-                  $('#audioLayerControl')[0].filterGain(db_gain);
-                  db_gain = 0;
-                  update_db_gain_btn();
-                }
-                </script>
-          </div>
-        </div>
-        <div class="span2">
-          <h6>Normalize</h6>
-          <div class="well" style="height: 130px; position:relative">
-            <p>Adjust the volume to the maximum of the selected audio sequence.</p>
-            <a style="position:absolute; bottom: 5px; right: 5px"  class="btn btn-primary pull-right" onclick="$('#audioLayerControl')[0].filterNormalize();">Apply</a>
-            <br>
-          </div>
-        </div>
-        <div class="span2">
-          <h6>Silence</h6>
-          <div class="well" style="height: 130px; position:relative">
-            <p>Silence the selected audio sequence</p>
-            <a style="position:absolute; bottom: 5px; right: 5px"  class="btn btn-primary pull-right" onclick="$('#audioLayerControl')[0].filterSilence();">Apply</a>
-            <br>
-          </div>
-        </div>
-        <div class="span2">
-          <h6>Fade In</h6>
-          <div class="well" style="height: 130px; position:relative">
-            <p>Create a linear fade int of the selected audio sequence</p>
-            <a style="position:absolute; bottom: 5px; right: 5px"  class="btn btn-primary pull-right" onclick="$('#audioLayerControl')[0].filterFadeIn();">Apply</a>
-            <br>
-          </div>
-        </div>
-        <div class="span2">
-          <h6>Fade Out</h6>
-          <div class="well" style="height: 130px; position:relative">
-            <p>Create a linear fade out of the selected audio sequence</p>
-            <a style="position:absolute; bottom: 5px; right: 5px" class="btn btn-primary pull-right" onclick="$('#audioLayerControl')[0].filterFadeOut();">Apply</a>
-            <br>
-          </div>
-        </div>
-        <div class="span1">
-
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="span8">
-
-        </div>
-      </div>
 
 
     <!-- Le javascript
@@ -237,24 +134,6 @@
     <script type="text/javascript" src="static/audioeditor/app/js/recorderWorker.js"></script>
     <script type="text/javascript" src="static/audioeditor/app/js/editorapp.js"></script>
 
-    <script type="text/javascript">
-      $(window).load(function()
-      {
-        var supportLabel =  $('#browser_support')[0];
 
-        if (typeof(window.AudioContext || window.webkitAudioContext) === 'undefined')
-        {
-          supportLabel.className = "label label-important";
-          supportLabel.innerHTML = 'no web audio API support. try the latest Google Chrome build.';
-        }
-        else
-        {
-          supportLabel.className = "label label-success";
-          supportLabel.innerHTML = 'you have web audio API support.';
-        }
-
-        $('#welcomeAsModal').modal('show');
-      });
-    </script>
   </body>
 </html>

@@ -1,12 +1,76 @@
+<!DOCTYPE html>
 <html>
-  <txt>
-    <b> IT WORKED!</b>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>MarkovTunes</title>
 
-    <audio controls = "controls" >
-      Your browser does not support the <code>audio</code> element
-      <source src="newtrack" type="audio/wav">
-    </audio>
-  </txt>
+        <!-- Bootstrap -->
+        <link href="static/audioeditor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="static/wavesurfer/example/css/style.css" />
+        <link rel="stylesheet" href="static/wavesurfer/example/css/ribbon.css" />
+
+        <!-- wavesurfer.js -->
+        <script src="static/wavesurfer/src/wavesurfer.js"></script>
+        <script src="static/wavesurfer/src/util.js"></script>
+        <script src="static/wavesurfer/src/webaudio.js"></script>
+        <script src="static/wavesurfer/src/mediaelement.js"></script>
+        <script src="static/wavesurfer/src/drawer.js"></script>
+        <script src="static/wavesurfer/src/drawer.canvas.js"></script>
+
+        <!-- regions plugin -->
+        <script src="static/wavesurfer/plugin/wavesurfer.regions.js"></script>
+
+        <!-- Demo -->
+        <script src="static/wavesurfer/example/main.js"></script>
+        <script src="static/wavesurfer/example/trivia.js"></script>
+    </head>
+
+    <body itemscope itemtype="http://schema.org/WebApplication">
+        <div class="container">
 
 
+            <div id="demo">
+                <div id="waveform">
+                    <div class="progress progress-striped active" id="progress-bar">
+                        <div class="progress-bar progress-bar-info"></div>
+                    </div>
+
+                    <!-- Here be the waveform -->
+                </div>
+
+                <div class="controls">
+
+                    <button class="btn btn-success" data-action="play">
+                        <i class="glyphicon glyphicon-play"></i>
+                        Play
+                        /
+                        <i class="glyphicon glyphicon-pause"></i>
+                        Pause
+                    </button>
+
+                </div>
+
+                <div class = "PrefRegions">
+
+                  <div class = "buttons">
+
+                    <button class="btn btn-secondary" data-action="togglelike">
+                        Like/Dislike
+                    </button>
+
+                    <button class="btn btn-primary" data-action="submit">
+                        Submit
+                    </button>
+
+                  </div>
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </body>
 </html>
