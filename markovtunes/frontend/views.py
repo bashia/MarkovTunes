@@ -2,7 +2,7 @@ from django.shortcuts import render,render_to_response,redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Template
 from uploadutils import UploadFileForm, handlefile
-from markovutils import generateWav
+from markovutils import generateWavandKey
 import json
 
 from django.views.decorators.csrf import csrf_exempt #DO NOT PUT THIS INTO PRODUCTION!!!
@@ -18,7 +18,6 @@ def uploadhandler(request): # Assuming best intentions (use AWS' IP host restric
     form = UploadFileForm(request.POST, request.FILES)
     handlefile(request.FILES['wavfile'])
 
-    #return HttpResponseRedirect('/iterate')
     response = HttpResponse('iterate')
     response['redirect'] = 'iterate'
 
@@ -31,11 +30,11 @@ def iterate(request):
 @csrf_exempt
 def sendnewtrack(request):
     response = HttpResponse()
-    responseData = generateWav()
+    responseData = generateWavandKey()
     response.write(responseData[0])
     response['Content-Type'] ='audio/wav'
     response['Content-Length'] = responseData[1]
-    #import pdb; pdb.set_trace()
+    response['sequence-key'] = responseData[2]
     return response
 
 @csrf_exempt

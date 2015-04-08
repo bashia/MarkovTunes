@@ -1,0 +1,17 @@
+[08/Apr/2015 03:26:26] DEBUG [django.db.backends:91] (0.001) QUERY = "\n            SELECT name FROM sqlite_master\n            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'\n            ORDER BY name" - PARAMS = (); args=None
+[08/Apr/2015 03:26:26] DEBUG [django.db.backends:91] (0.000) QUERY = u'SELECT "django_migrations"."app", "django_migrations"."name" FROM "django_migrations"' - PARAMS = (); args=()
+[08/Apr/2015 03:26:36] DEBUG [django.db.backends:91] (0.001) QUERY = "\n            SELECT name FROM sqlite_master\n            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'\n            ORDER BY name" - PARAMS = (); args=None
+[08/Apr/2015 03:26:36] DEBUG [django.db.backends:91] (0.000) QUERY = u'SELECT "django_migrations"."app", "django_migrations"."name" FROM "django_migrations"' - PARAMS = (); args=()
+[08/Apr/2015 03:27:00] ERROR [django.request:231] Internal Server Error: /newtrack
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/django/core/handlers/base.py", line 111, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Library/Python/2.7/site-packages/django/views/decorators/csrf.py", line 57, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/Users/darius/MarkovTunes/markovtunes/frontend/views.py", line 33, in sendnewtrack
+    responseData = generateWavandKey()
+  File "/Users/darius/MarkovTunes/markovtunes/frontend/markovutils.py", line 7, in generateWavandKey
+    content = markov.main()
+  File "/Users/darius/MarkovTunes/markovtunes/frontend/markov.py", line 273, in main
+    filename = "blarg.txt"
+NameError: global name 'aubio_out' is not defined

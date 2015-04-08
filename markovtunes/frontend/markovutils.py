@@ -1,11 +1,12 @@
 from django import forms
 import os
+import sys
+import markov
 
-def generateWav(): #Placeholder for now, return wav file-formatted sound array for production
-    content = []
-    contentsize = 0
-    contentpath = 'blarg.wav'
-    with open(contentpath, 'rb') as file:
-        content = file.read()
-        contentsize = os.stat(contentpath).st_size
-    return [content,contentsize]
+def generateWavandKey(): #Placeholder for now, return wav file-formatted sound array for production
+    content = markov.main()
+    contentsize = sys.getsizeof(content)
+    key = ""
+
+
+    return [content,contentsize,key]
