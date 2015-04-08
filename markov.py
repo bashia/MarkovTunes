@@ -233,37 +233,37 @@ class system:
 			merge = 0
 			
 	def parsemidi2(self, aubionotes,snd):
-	# reads through aubionotes txt file and extracts pitch and duration information.
-	# merges notes shorter than 150ms with previous note
-	# Populates midi_in & audiofile. format: pitch, start time, end time
-	n = aubionotes
-
-	merge = 0
-	for x in range(4,len(n)-3):
-
-		curr_line = n[x]
-		curr_match = re.search(r'(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)', curr_line)
-		if curr_match:
-			curr_pitch = curr_match.group(1)
-			curr_start = curr_match.group(2)
-			curr_end = curr_match.group(3)
-			curr_dur = (float(curr_end) - float(curr_start))
-			if (curr_dur <= 0.15):
-				if (merge == 0):
-					last_start = curr_start
-					last_pitch = curr_pitch
-					merge = 1
-					continue
-			else:
-				if (merge == 1):
-					curr_start = last_start
-				tick = int(curr_dur/tick_val)
-				self.midi_in.append((int((float)(curr_pitch)),tick))
-				begin = float(curr_start)*44100
-				end = float(curr_end)*44100
-				self.audiofile.append(snd[begin:end])
-				wavfile.write('sound'+str(x)+'.wav', 44100, snd[begin:end])	#testing
-				merge = 0		
+		# reads through aubionotes txt file and extracts pitch and duration information.
+		# merges notes shorter than 150ms with previous note
+		# Populates midi_in & audiofile. format: pitch, start time, end time
+		n = aubionotes
+	
+		merge = 0
+		for x in range(4,len(n)-3):
+	
+			curr_line = n[x]
+			curr_match = re.search(r'(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)', curr_line)
+			if curr_match:
+				curr_pitch = curr_match.group(1)
+				curr_start = curr_match.group(2)
+				curr_end = curr_match.group(3)
+				curr_dur = (float(curr_end) - float(curr_start))
+				if (curr_dur <= 0.15):
+					if (merge == 0):
+						last_start = curr_start
+						last_pitch = curr_pitch
+						merge = 1
+						continue
+				else:
+					if (merge == 1):
+						curr_start = last_start
+					tick = int(curr_dur/tick_val)
+					self.midi_in.append((int((float)(curr_pitch)),tick))
+					begin = float(curr_start)*44100
+					end = float(curr_end)*44100
+					self.audiofile.append(snd[begin:end])
+					wavfile.write('sound'+str(x)+'.wav', 44100, snd[begin:end])	#testing
+					merge = 0		
 
 def main():
 
