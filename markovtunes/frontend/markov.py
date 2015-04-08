@@ -14,13 +14,14 @@ tick_val = .0023
 
 class system:
 
-	def __init__(self, audiofile, tracker, midi_in, pitch_list, duration_list, time_list, p_model, d_model, first_pitches, first_d, gen_result):
+	def __init__(self, audiofile, tracker, midi_in, pitch_list, duration_list, time_list, audiotime_list, p_model, d_model, first_pitches, first_d, gen_result):
 		self.audiofile = audiofile
 		self.tracker = tracker
 		self.midi_in = midi_in
 		self.pitch_list = pitch_list
 		self.duration_list = duration_list
 		self.time_list = time_list
+		self.audiotime_list = audiotime_list
 		self.p_model = p_model
 		self.d_model = d_model
 		self.first_pitches = first_pitches
@@ -180,6 +181,7 @@ class system:
 
 		#print(self.p_model)
 
+## this one not needed for Audio
 	def updatemodels(self, pairlists):
 		# changes the good ones
 		start_index = 0
@@ -210,18 +212,35 @@ class system:
 
 		newclip = []
 		rate = 44100
-
+		self.audiotime_list[:] = []
+		last_point = 0.0
 		for i in range(0, len(self.pitch_list)):
 			total = len(self.tracker[self.pitch_list[i]%12])
-			rand = randint(0, total-1)
-			if i == 0:
-				m = self.audiofile[self.tracker[self.pitch_list[i]%12][rand]]
+			if total > 0:
+				rand = randint(0, total-1)
+			else:
+				n = [(.00003, .00004)]
+				self.audiotime_list.append((last_point, last_point + 1.0/44100.0))
+				b = numpy.concatenate([m, n])
+				m = b
 				continue
+
+			if i == 0:
+
+				m = self.audiofile[self.tracker[self.pitch_list[i]%12][rand]]
+				point = (float(len(m))/44100.0)
+				self.audiotime_list.append((0.0, point))
+				last_point = point
+				continue
+
 			n = self.audiofile[self.tracker[self.pitch_list[i]%12][rand]]
+			point = (float)(len(m))/44100.0
+			self.audiotime_list.append((last_point, last_point + point))
+			last_point = last_point + point
 			b = numpy.concatenate([m, n ])
 			m = b
 
-
+		#b = [numpy.float32(elem) for elem in b]
 
 		newclip = numpy.array(b)
 		wavfile.write('chopped.wav', 44100, newclip)
@@ -262,16 +281,16 @@ class system:
 			end = float(curr_end)*44100
 			self.audiofile.append(snd[begin:end])
 			merge = 0
-			
+
 	def parsemidi2(self, aubionotes,snd):
 		# reads through aubionotes txt file and extracts pitch and duration information.
 		# merges notes shorter than 150ms with previous note
 		# Populates midi_in & audiofile. format: pitch, start time, end time
 		n = aubionotes
-	
+
 		merge = 0
 		for x in range(4,len(n)-3):
-	
+
 			curr_line = n[x]
 			curr_match = re.search(r'(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)', curr_line)
 			if curr_match:
@@ -293,9 +312,32 @@ class system:
 					begin = float(curr_start)*44100
 					end = float(curr_end)*44100
 					self.audiofile.append(snd[begin:end])
-					wavfile.write('sound'+str(x)+'.wav', 44100, snd[begin:end])	#testing
-					merge = 0		
+					#wavfile.write('sound'+str(x)+'.wav', 44100, snd[begin:end])	#testing
+					merge = 0
 
+	def audio_update(self, pairlists): #List of pairs
+		# changes the good ones
+		start_index = 0
+		end_index = 0
+		for h in range (0, len(pairlists)):
+			start_time = pairlists[h][0]
+			end_time = pairlists[h][1]
+			flag = 0
+			for j in range (0, len(self.audiotime_list)):
+				if self.audiotime_list[j][1] > start_time and flag == 0:
+					start_index = j-1
+					flag = 1
+				if self.audiotime_list[j][1] > end_time:
+					end_index = j-1
+			twoback = self.pitch_list[start_index]%12
+			oneback = self.pitch_list[start_index+1]%12
+
+			for x in range(start_index+2, end_index):
+				a = self.pitch_list[x]%12
+				self.p_model[(twoback*12)+oneback][a] += 1
+
+				twoback = oneback
+				oneback = a
 
 def main():
 
@@ -307,9 +349,8 @@ def main():
 	aubio_out.close()
 	## Reads in input wav, converts it to floating points between -1 and 1
 	sampFreq, snd = wavfile.read('blarg.wav')
-	snd = snd / (2.**15)
 	monomix = []
-	thing1 = system([],[],[],[],[],[],[],[],[],0,[])
+	thing1 = system([],[],[],[],[],[],[],[],[],[],0,[])
 	#numpy.set_printoptions(threshold='nan')
 
 

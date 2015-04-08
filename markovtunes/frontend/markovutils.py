@@ -3,7 +3,7 @@ import os
 import sys
 import markov
 
-def generateWavandKey(): #Placeholder for now, return wav file-formatted sound array for production
+def generateWavandKey(): 
     content = markov.main()
     contentsize = sys.getsizeof(content)
     key = ""

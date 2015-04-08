@@ -4,7 +4,7 @@ from django.template import Template
 from uploadutils import UploadFileForm, handlefile
 from markovutils import generateWavandKey
 import json
-
+import os
 from django.views.decorators.csrf import csrf_exempt #DO NOT PUT THIS INTO PRODUCTION!!!
 
 @csrf_exempt
@@ -30,11 +30,12 @@ def iterate(request):
 @csrf_exempt
 def sendnewtrack(request):
     response = HttpResponse()
+    print(os.getcwd())
     responseData = generateWavandKey()
-    response.write(responseData[0])
+    response.write(open("chopped.wav","rb").read())
     response['Content-Type'] ='audio/wav'
-    response['Content-Length'] = responseData[1]
-    response['sequence-key'] = responseData[2]
+    response['Content-Length'] = os.path.getsize("chopped.wav")
+    import pdb; pdb.set_trace()
     return response
 
 @csrf_exempt
