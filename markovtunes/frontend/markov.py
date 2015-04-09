@@ -173,7 +173,7 @@ class system:
 		self.duration_list = durlust
 		self.time_list = timelist
 		self.gen_result = zip(notelust, durlust)
-		self.makemidi()
+
 		#self.updatemodels(sub)
 
 		return self.slice()
@@ -200,6 +200,7 @@ class system:
 			oneback = self.pitch_list[start_index+1]%12
 
 			for x in range(start_index+2, end_index):
+
 				a = self.pitch_list[x]%12
 				if pairlists[h][0] == 1:
 					self.p_model[(twoback*12)+oneback][a] += 1
@@ -241,10 +242,8 @@ class system:
 			m = b
 
 		#b = [numpy.float32(elem) for elem in b]
-
 		newclip = numpy.array(b)
 		wavfile.write('chopped.wav', 44100, newclip)
-		return newclip
 
 	def parsemidi(self, aubionotes,snd):
 		# reads through aubionotes txt file and extracts pitch and duration information.
@@ -333,6 +332,10 @@ class system:
 			oneback = self.pitch_list[start_index+1]%12
 
 			for x in range(start_index+2, end_index):
+
+				# if (x == (end_index-1)) and (h==(len(pairlists)-1)):
+				# 	import pdb; pdb.set_trace()
+
 				a = self.pitch_list[x]%12
 				self.p_model[(twoback*12)+oneback][a] += 1
 
@@ -349,12 +352,14 @@ def main():
 	aubio_out.close()
 	## Reads in input wav, converts it to floating points between -1 and 1
 	sampFreq, snd = wavfile.read('blarg.wav')
-	monomix = []
 	thing1 = system([],[],[],[],[],[],[],[],[],[],0,[])
 	#numpy.set_printoptions(threshold='nan')
 
 
-	thing1.parsemidi(aubionotes,snd)
+	thing1.parsemidi2(aubionotes,snd)
 	thing1.makemidi()
 	thing1.makemarkov()
-	return thing1.generatemelody()
+
+	return thing1
+
+	#return thing1.generatemelody()

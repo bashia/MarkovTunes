@@ -38,6 +38,3 @@ def main():
     # thing2 = picklejar.read(name)
 
     return
-
-if __name__ == "__main__":
-    main()

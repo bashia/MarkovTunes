@@ -27,7 +27,19 @@ var GLOBAL_ACTIONS = {
             url: 'feedback',
             type: 'post',
             dataType: 'json',
-            data: JSON.stringify(feedback)
+            data: JSON.stringify(feedback),
+            beforeSend: function() {
+
+            },
+            success: function(data) {   //Bad practice- the response is literally the relative URL of the post-upload page. I don't care right now.
+              alert("Feedback received!");
+              window.location.href = data;
+            },
+            error: function(jqXHR,textStatus,errorThrown) { //Screw it- we'll fix it for production!
+              alert("Feedback Received!");
+              window.location.href = "iterate";
+            }
+
         });
     }
 };
