@@ -28,11 +28,7 @@ def generateWav():
 
     markovmodel = unpickler.read("markovmodel.p")
 
-    content = markovmodel.generatemelody()
-
-    contentsize = sys.getsizeof(content)
-
-    return [content,contentsize]
+    return markovmodel.generatemelody()
 
 def updateModel(pairlist):
 

@@ -8,6 +8,7 @@ import midi
 import wave, struct
 import re
 from random import randint
+from io import BytesIO
 import os
 
 tick_val = .0023
@@ -243,7 +244,9 @@ class system:
 
 		#b = [numpy.float32(elem) for elem in b]
 		newclip = numpy.array(b)
-		wavfile.write('chopped.wav', 44100, newclip)
+		bytesbuffer = BytesIO()
+		wavfile.write(bytesbuffer, 44100, newclip)
+		return bytesbuffer
 
 	def parsemidi(self, aubionotes,snd):
 		# reads through aubionotes txt file and extracts pitch and duration information.
@@ -311,7 +314,6 @@ class system:
 					begin = float(curr_start)*44100
 					end = float(curr_end)*44100
 					self.audiofile.append(snd[begin:end])
-					#wavfile.write('sound'+str(x)+'.wav', 44100, snd[begin:end])	#testing
 					merge = 0
 
 	def audio_update(self, pairlists): #List of pairs

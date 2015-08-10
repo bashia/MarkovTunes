@@ -33,12 +33,10 @@ def iterate(request):
 @csrf_exempt
 def sendnewtrack(request):
 
-
-    markovutils.generateWav()
     response = HttpResponse()
-    response.write(open("chopped.wav","rb").read())
+    wavbytes = markovutils.generateWav()
+    response.write(wavbytes.read())
     response['Content-Type'] ='audio/wav'
-    response['Content-Length'] = os.path.getsize("chopped.wav")
     return response
 
 @csrf_exempt
