@@ -2,6 +2,7 @@
 
 import numpy
 from scipy.io import wavfile
+from subprocess import check_output
 import sys
 import math
 import midi
@@ -346,12 +347,8 @@ class system:
 
 def main():
 
-	os.system("aubionotes -v blarg.wav &> blarg.txt")
 
-	filename = "blarg.txt"
-	with open(filename, 'r') as aubio_out:
-		aubionotes = aubio_out.readlines()
-	aubio_out.close()
+	aubionotes = check_output(['aubionotes', '-v', 'blarg.wav'])
 	## Reads in input wav, converts it to floating points between -1 and 1
 	sampFreq, snd = wavfile.read('blarg.wav')
 	thing1 = system([],[],[],[],[],[],[],[],[],[],0,[])
@@ -365,3 +362,8 @@ def main():
 	return thing1
 
 	#return thing1.generatemelody()
+
+
+
+if __name__ == "__main__":
+    main()
