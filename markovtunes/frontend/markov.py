@@ -5,7 +5,7 @@ from scipy.io import wavfile
 from subprocess import check_output
 import sys
 import math
-import midi
+# import midi
 import wave, struct
 import re
 from random import randint
@@ -30,28 +30,28 @@ class system:
 		self.first_d = first_d
 		self.gen_result = gen_result
 
-	def makemidi(self):
-		# General midi business
-		pattern = midi.Pattern()
-		track = midi.Track()
-		pattern.append(track)
-		tempo = 59
-		tick_val = (60*1000000)/tempo
-		tick_val = float(tick_val/220000000)
-		ticks = []
-
-		for n in range(0, len(self.midi_in)-1):
-			pitch1 = int(self.midi_in[n][0])
-			nextpitch = int(self.midi_in[n+1][0])
-			off_tick = self.midi_in[n][1]
-			ticks.append(off_tick)
-			on = midi.NoteOnEvent(tick = 0, velocity = 100, pitch = pitch1)
-			track.append(on)
-			off = midi.NoteOffEvent(tick = off_tick, pitch = pitch1)
-			track.append(off)
-
-		eot = midi.EndOfTrackEvent(tick = 1)
-		track.append(eot)
+	# def makemidi(self):
+	# 	# General midi business
+	# 	pattern = midi.Pattern()
+	# 	track = midi.Track()
+	# 	pattern.append(track)
+	# 	tempo = 59
+	# 	tick_val = (60*1000000)/tempo
+	# 	tick_val = float(tick_val/220000000)
+	# 	ticks = []
+	#
+	# 	for n in range(0, len(self.midi_in)-1):
+	# 		pitch1 = int(self.midi_in[n][0])
+	# 		nextpitch = int(self.midi_in[n+1][0])
+	# 		off_tick = self.midi_in[n][1]
+	# 		ticks.append(off_tick)
+	# 		on = midi.NoteOnEvent(tick = 0, velocity = 100, pitch = pitch1)
+	# 		track.append(on)
+	# 		off = midi.NoteOffEvent(tick = off_tick, pitch = pitch1)
+	# 		track.append(off)
+	#
+	# 	eot = midi.EndOfTrackEvent(tick = 1)
+	# 	track.append(eot)
 		# Writes file to disk if wanted
 
 		#midi.write_midifile("bday.mid", pattern)
@@ -286,6 +286,7 @@ class system:
 			merge = 0
 
 	def parsemidi2(self, aubionotes,snd):
+
 		# reads through aubionotes txt file and extracts pitch and duration information.
 		# merges notes shorter than 150ms with previous note
 		# Populates midi_in & audiofile. format: pitch, start time, end time
@@ -337,7 +338,6 @@ class system:
 			for x in range(start_index+2, end_index):
 
 				# if (x == (end_index-1)) and (h==(len(pairlists)-1)):
-				# 	import pdb; pdb.set_trace()
 
 				a = self.pitch_list[x]%12
 				self.p_model[(twoback*12)+oneback][a] += 1
@@ -349,6 +349,7 @@ def main():
 
 
 	aubionotes = check_output(['aubionotes', '-v', 'blarg.wav'])
+	import pdb;pd.set_trace()
 	## Reads in input wav, converts it to floating points between -1 and 1
 	sampFreq, snd = wavfile.read('blarg.wav')
 	thing1 = system([],[],[],[],[],[],[],[],[],[],0,[])
@@ -356,7 +357,7 @@ def main():
 
 
 	thing1.parsemidi2(aubionotes,snd)
-	thing1.makemidi()
+	# thing1.makemidi()
 	thing1.makemarkov()
 
 	return thing1
