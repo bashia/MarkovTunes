@@ -30,32 +30,6 @@ class system:
 		self.first_d = first_d
 		self.gen_result = gen_result
 
-	def makemidi(self):
-		# General midi business
-		pattern = midi.Pattern()
-		track = midi.Track()
-		pattern.append(track)
-		tempo = 59
-		tick_val = (60*1000000)/tempo
-		tick_val = float(tick_val/220000000)
-		ticks = []
-
-		for n in range(0, len(self.midi_in)-1):
-			pitch1 = int(self.midi_in[n][0])
-			nextpitch = int(self.midi_in[n+1][0])
-			off_tick = self.midi_in[n][1]
-			ticks.append(off_tick)
-			on = midi.NoteOnEvent(tick = 0, velocity = 100, pitch = pitch1)
-			track.append(on)
-			off = midi.NoteOffEvent(tick = off_tick, pitch = pitch1)
-			track.append(off)
-
-		eot = midi.EndOfTrackEvent(tick = 1)
-		track.append(eot)
-		# Writes file to disk if wanted
-
-		#midi.write_midifile("bday.mid", pattern)
-
 	def makemarkov(self):
 		size = len(self.midi_in)
 		self.p_model = numpy.zeros((144,12))
@@ -250,42 +224,6 @@ class system:
 		return bytesbuffer
 
 	def parsemidi(self, aubionotes,snd):
-		# reads through aubionotes txt file and extracts pitch and duration information.
-		# merges notes shorter than 150ms with previous note
-		# Populates midi_in & audiofile. format: pitch, start time, end time
-		n = aubionotes
-
-		merge = 0
-		for x in range(4,len(n)-3):
-			if (merge == 0):
-				curr_line = n[x]
-				curr_match = re.search(r'(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)', curr_line)
-				if curr_match:
-					curr_pitch = curr_match.group(1)
-					curr_start = curr_match.group(2)
-					curr_end = curr_match.group(3)
-					#print str(x) + " " + str(curr_pitch) + " " + str(curr_start) + " " + str(curr_end)
-				else:
-					continue
-			next_line = n[x+1]
-			next_match = re.search(r'(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)', next_line)
-			if next_match:
-				next_start = next_match.group(2)
-				next_end = next_match.group(3)
-				next_dur = (float(next_end) - float(next_start))
-				if(next_dur <= 0.15):
-					curr_end = next_end
-					merge = 1
-					continue
-			curr_dur = (float(curr_end) - float(curr_start))
-			tick = int(curr_dur/tick_val)
-			self.midi_in.append((int((float)(curr_pitch)),tick))
-			begin = float(curr_start)*44100
-			end = float(curr_end)*44100
-			self.audiofile.append(snd[begin:end])
-			merge = 0
-
-	def parsemidi2(self, aubionotes,snd):
 
 		# reads through aubionotes txt file and extracts pitch and duration information.
 		# merges notes shorter than 150ms with previous note
@@ -352,8 +290,7 @@ def main():
 	#numpy.set_printoptions(threshold='nan')
 
 
-	thing1.parsemidi2(aubionotes,snd)
-	thing1.makemidi()
+	thing1.parsemidi(aubionotes,snd)
 	thing1.makemarkov()
 
 	return thing1
