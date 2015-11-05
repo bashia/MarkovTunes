@@ -5,7 +5,7 @@ from scipy.io import wavfile
 from subprocess import check_output
 import sys
 import math
-# import midi
+import midi
 import wave, struct
 import re
 from random import randint
@@ -30,28 +30,28 @@ class system:
 		self.first_d = first_d
 		self.gen_result = gen_result
 
-	# def makemidi(self):
-	# 	# General midi business
-	# 	pattern = midi.Pattern()
-	# 	track = midi.Track()
-	# 	pattern.append(track)
-	# 	tempo = 59
-	# 	tick_val = (60*1000000)/tempo
-	# 	tick_val = float(tick_val/220000000)
-	# 	ticks = []
-	#
-	# 	for n in range(0, len(self.midi_in)-1):
-	# 		pitch1 = int(self.midi_in[n][0])
-	# 		nextpitch = int(self.midi_in[n+1][0])
-	# 		off_tick = self.midi_in[n][1]
-	# 		ticks.append(off_tick)
-	# 		on = midi.NoteOnEvent(tick = 0, velocity = 100, pitch = pitch1)
-	# 		track.append(on)
-	# 		off = midi.NoteOffEvent(tick = off_tick, pitch = pitch1)
-	# 		track.append(off)
-	#
-	# 	eot = midi.EndOfTrackEvent(tick = 1)
-	# 	track.append(eot)
+	def makemidi(self):
+		# General midi business
+		pattern = midi.Pattern()
+		track = midi.Track()
+		pattern.append(track)
+		tempo = 59
+		tick_val = (60*1000000)/tempo
+		tick_val = float(tick_val/220000000)
+		ticks = []
+
+		for n in range(0, len(self.midi_in)-1):
+			pitch1 = int(self.midi_in[n][0])
+			nextpitch = int(self.midi_in[n+1][0])
+			off_tick = self.midi_in[n][1]
+			ticks.append(off_tick)
+			on = midi.NoteOnEvent(tick = 0, velocity = 100, pitch = pitch1)
+			track.append(on)
+			off = midi.NoteOffEvent(tick = off_tick, pitch = pitch1)
+			track.append(off)
+
+		eot = midi.EndOfTrackEvent(tick = 1)
+		track.append(eot)
 		# Writes file to disk if wanted
 
 		#midi.write_midifile("bday.mid", pattern)
@@ -290,33 +290,29 @@ class system:
 		# reads through aubionotes txt file and extracts pitch and duration information.
 		# merges notes shorter than 150ms with previous note
 		# Populates midi_in & audiofile. format: pitch, start time, end time
-		n = aubionotes
 
-		merge = 0
-		for x in range(4,len(n)-3):
-
-			curr_line = n[x]
-			curr_match = re.search(r'(\d+\.\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)', curr_line)
-			if curr_match:
-				curr_pitch = curr_match.group(1)
-				curr_start = curr_match.group(2)
-				curr_end = curr_match.group(3)
-				curr_dur = (float(curr_end) - float(curr_start))
-				if (curr_dur <= 0.15):
-					if (merge == 0):
-						last_start = curr_start
-						last_pitch = curr_pitch
-						merge = 1
-						continue
-				else:
-					if (merge == 1):
-						curr_start = last_start
-					tick = int(curr_dur/tick_val)
-					self.midi_in.append((int((float)(curr_pitch)),tick))
-					begin = float(curr_start)*44100
-					end = float(curr_end)*44100
-					self.audiofile.append(snd[begin:end])
-					merge = 0
+		merge = False
+		for curr_line in aubionotes.split("\n")[2:]:
+			linesplit = curr_line.split()
+			if len(linesplit) < 3:
+				continue
+			curr_pitch, curr_start, curr_end = linesplit
+			curr_dur = (float(curr_end) - float(curr_start))
+			if (curr_dur <= 0.15):
+				if not merge:
+					last_start = curr_start
+					last_pitch = curr_pitch
+					merge = True
+					continue
+			else:
+				if merge:
+					curr_start = last_start
+				tick = int(curr_dur/tick_val)
+				self.midi_in.append((int((float)(curr_pitch)),tick))
+				begin = float(curr_start)*44100
+				end = float(curr_end)*44100
+				self.audiofile.append(snd[begin:end])
+				merge = 0
 
 	def audio_update(self, pairlists): #List of pairs
 		# changes the good ones
@@ -347,17 +343,17 @@ class system:
 
 def main():
 
-
 	aubionotes = check_output(['aubionotes', '-v', 'blarg.wav'])
-	import pdb;pd.set_trace()
+
 	## Reads in input wav, converts it to floating points between -1 and 1
 	sampFreq, snd = wavfile.read('blarg.wav')
 	thing1 = system([],[],[],[],[],[],[],[],[],[],0,[])
+
 	#numpy.set_printoptions(threshold='nan')
 
 
 	thing1.parsemidi2(aubionotes,snd)
-	# thing1.makemidi()
+	thing1.makemidi()
 	thing1.makemarkov()
 
 	return thing1
